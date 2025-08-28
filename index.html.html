@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>for bbg — from ruru</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root{
+      --bg1:#ffdbe8; --bg2:#d7f0ff; --bg3:#fff3c4;
+      --card:#ffffffcc; --text:#3a2c35; --accent:#ff7da2; --accent2:#7aa7ff;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; overflow:hidden; display:grid; place-items:center;
+      background: radial-gradient(1200px 800px at 20% 10%, var(--bg1), transparent 70%),
+                  radial-gradient(1200px 800px at 80% 90%, var(--bg2), transparent 70%),
+                  radial-gradient(1000px 700px at 50% 50%, var(--bg3), transparent 60%),
+                  linear-gradient(135deg,#ffe9f1,#e9f6ff,#fff7d6);
+      background-size: 200% 200%;
+      animation: drift 18s ease-in-out infinite;
+      font-family: ui-rounded, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color:var(--text);
+      cursor: pointer;
+    }
+    @keyframes drift{
+      0%,100%{background-position: 0% 50%}
+      50%{background-position: 100% 50%}
+    }
+
+    .card{
+      position:relative;
+      width:min(92vw,720px);
+      padding:28px 26px 22px;
+      background:var(--card);
+      backdrop-filter: blur(8px);
+      border: 2px solid #ffffffaa;
+      border-radius: 28px;
+      box-shadow: 0 15px 40px rgba(0,0,0,.12);
+      text-align:center;
+      z-index:2;
+    }
+    .ribbon{
+      position:absolute; inset:auto 16px -14px auto;
+      background: conic-gradient(from 180deg at 50% 50%, #ff9ec0, #92b4ff, #ffe27a, #ff9ec0);
+      color:#fff; padding:6px 14px; border-radius: 999px;
+      font-size:14px; letter-spacing:.3px;
+      box-shadow: 0 8px 18px rgba(0,0,0,.12);
+      animation: shimmer 3s linear infinite;
+      user-select:none;
+    }
+    @keyframes shimmer{
+      0%{filter:hue-rotate(0deg)} 100%{filter:hue-rotate(360deg)}
+    }
+
+    h1{
+      margin:8px 0 6px; font-weight:900; font-size: clamp(28px, 6vw, 44px);
+      line-height:1.1;
+      text-shadow: 0 2px 0 #fff, 0 10px 20px rgba(0,0,0,.06);
+    }
+    .subtitle{
+      font-size: clamp(14px, 2.8vw, 18px);
+      opacity:.9; margin-bottom:14px;
+    }
+    .type{
+      display:inline-block; min-height:1.6em;
+      font-weight:700; padding:4px 10px; border-radius:999px;
+      background:#ffffffaa; border:1px dashed #ffd1e1;
+    }
+
+    .chipbar{
+      display:flex; gap:10px; flex-wrap:wrap; justify-content:center;
+      margin:16px 0 6px;
+    }
+    .chip{
+      padding:8px 12px; border-radius:999px; font-size:14px;
+      background:#fff; border:1px solid #0000000f; box-shadow: 0 6px 16px #00000010;
+      user-select:none;
+    }
+
+    .btns{margin-top:14px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap}
+    .btn{
+      appearance:none; border:none; border-radius:12px; padding:10px 14px;
+      background:linear-gradient(120deg, var(--accent), #ffa8c4);
+      color:#fff; font-weight:700; box-shadow: 0 10px 24px #ff7da244;
+      transform: translateY(0); transition: transform .1s ease;
+      cursor:pointer;
+    }
+    .btn.secondary{
+      background:linear-gradient(120deg, var(--accent2), #9cc0ff);
+      box-shadow: 0 10px 24px #7aa7ff44;
+    }
+    .btn:active{transform: translateY(2px)}
+
+    /* floating emoji */
+    .float{
+      position:fixed; left:0; top:0; font-size:24px; pointer-events:none;
+      animation: rise linear forwards;
+      filter: drop-shadow(0 6px 14px rgba(0,0,0,.2));
+    }
+    @keyframes rise{
+      0%{transform: translate(var(--x,0px), var(--y,0px)) scale(0.9); opacity:.95}
+      100%{transform: translate(calc(var(--x,0px)), calc(var(--y,0px) - var(--h,700px))) scale(1.1); opacity:0}
+    }
+
+    /* confetti stars for the “burst” */
+    .pop{
+      position:fixed; width:8px; height:8px; border-radius:2px; background:#fff;
+      box-shadow:0 0 0 1px #0000000f inset;
+      animation: pop 900ms ease-out forwards;
+      transform: translate(-50%,-50%);
+    }
+    @keyframes pop{
+      0%{opacity:1}
+      100%{opacity:0; transform: translate(var(--dx), var(--dy)) rotate(120deg)}
+    }
+
+    /* pocket note modal */
+    .modal-backdrop{
+      position:fixed; inset:0; background:#0006; display:none; place-items:center; z-index:5;
+    }
+    .modal{
+      width:min(90vw,520px); background:#fff; border-radius:24px; padding:20px;
+      box-shadow: 0 20px 50px rgba(0,0,0,.25);
+      border:2px solid #fff0f6;
+    }
+    .modal h3{margin:8px 0 12px}
+    .modal p{margin:0 0 12px; line-height:1.5}
+    .close{
+      float:right; background:#ffe3ee; border:none; padding:6px 10px; border-radius:8px; cursor:pointer;
+    }
+
+    /* tiny footer */
+    .foot{
+      margin-top:10px; font-size:12px; opacity:.6; user-select:none;
+    }
+  </style>
+</head>
+<body>
+  <main class="card" id="card">
+    <div class="ribbon">for bbg — from ruru ✨</div>
+    <h1>for bbg — from ruru</h1>
+    <div class="subtitle">
+      <span class="type" id="type"></span>
+    </div>
+
+    <div class="chipbar">
+      <div class="chip">💅 bbg vibes</div>
+      <div class="chip">⭐ the diva ruru</div>
+      
+      <div class="chip">💌 pocket note inside</div>
+    </div>
+
+    <div class="btns">
+      <button class="btn" id="burstBtn">make it sparkle ✨</button>
+      <button class="btn secondary" id="noteBtn">open pocket note 💌</button>
+    </div>
+
+    <div class="foot">tip: click anywhere for more sparkles • press & hold for extra glow</div>
+  </main>
+
+  <!-- pocket note modal -->
+  <div class="modal-backdrop" id="backdrop">
+    <div class="modal">
+      <button class="close" id="closeNote">close</button>
+      <h3>bbg, a tiny note from ruru 💗</h3>
+      <p>shut your bitch ass up.</p>
+      <p>signed, your ruru 🫶</p>
+    </div>
+  </div>
+
+  <script>
+    // rotating typewriter lines
+    const lines = [
+      "hi bbg, this page is just for you 🌸",
+      "i'm building my skills from chatgpt💫",
+      
+    ];
+    const typeEl = document.getElementById("type");
+    let li = 0, ci = 0, typing = true;
+
+    function loopType(){
+      const text = lines[li];
+      if(typing){
+        ci++;
+        typeEl.textContent = text.slice(0, ci);
+        if(ci === text.length){ typing = false; setTimeout(loopType, 1200); return; }
+      }else{
+        ci--;
+        typeEl.textContent = text.slice(0, ci);
+        if(ci === 0){ typing = true; li = (li+1)%lines.length; }
+      }
+      setTimeout(loopType, typing ? 36 : 18);
+    }
+    loopType();
+
+    // floating emoji particles
+    const emojis = ["💖","🌷","⭐","✨","💫","🫶","🌸","🍓","🎀","🧸"];
+    function spawnFloat(x, y){
+      const el = document.createElement("div");
+      el.className = "float";
+      el.textContent = emojis[Math.floor(Math.random()*emojis.length)];
+      const size = Math.random()*18+18;
+      el.style.fontSize = size+"px";
+      const driftX = (Math.random()*2-1)*120;
+      const height = 500 + Math.random()*400;
+      el.style.setProperty("--x", x + driftX + "px");
+      el.style.setProperty("--y", y + "px");
+      el.style.setProperty("--h", height + "px");
+      document.body.appendChild(el);
+      setTimeout(()=>el.remove(), 4000);
+    }
+
+    // ambient floaters
+    setInterval(()=>{
+      spawnFloat(Math.random()*window.innerWidth, window.innerHeight + 20);
+    }, 520);
+
+    // click burst confetti + floaters
+    function burst(x, y){
+      for(let i=0;i<14;i++){
+        const p = document.createElement("div");
+        p.className = "pop";
+        const a = (Math.PI*2)*(i/14);
+        const d = 60 + Math.random()*60;
+        p.style.left = x+"px"; p.style.top = y+"px";
+        p.style.setProperty("--dx", Math.cos(a)*d + "px");
+        p.style.setProperty("--dy", Math.sin(a)*d + "px");
+        document.body.appendChild(p);
+        setTimeout(()=>p.remove(), 900);
+      }
+      for(let j=0;j<8;j++){
+        setTimeout(()=>spawnFloat(x+(Math.random()*80-40), y+(Math.random()*40-20)), j*40);
+      }
+    }
+
+    document.addEventListener("click", (e)=>{
+      burst(e.clientX, e.clientY);
+    });
+
+    // press & hold glow
+    let holdTimer;
+    document.body.addEventListener("mousedown", ()=>{
+      holdTimer = setInterval(()=> {
+        const x = Math.random()*window.innerWidth;
+        const y = Math.random()*window.innerHeight*0.8+window.innerHeight*0.1;
+        spawnFloat(x, y);
+      }, 120);
+    });
+    document.body.addEventListener("mouseup", ()=> clearInterval(holdTimer));
+    document.body.addEventListener("mouseleave", ()=> clearInterval(holdTimer));
+
+    // buttons
+    document.getElementById("burstBtn").addEventListener("click", (e)=>{
+      e.stopPropagation();
+      const r = document.getElementById("card").getBoundingClientRect();
+      burst(r.left + r.width/2, r.top + 20);
+    });
+
+    // modal pocket note
+    const backdrop = document.getElementById("backdrop");
+    document.getElementById("noteBtn").addEventListener("click", (e)=>{ e.stopPropagation(); backdrop.style.display="grid"; });
+    document.getElementById("closeNote").addEventListener("click", ()=> backdrop.style.display="none");
+    backdrop.addEventListener("click", (e)=>{ if(e.target===backdrop) backdrop.style.display="none"; });
+
+    // gentle entrance
+    window.addEventListener("load", ()=>{
+      for(let i=0;i<12;i++){
+        setTimeout(()=>spawnFloat(Math.random()*innerWidth, innerHeight-10), i*120);
+      }
+    });
+  </script>
+</body>
+</html>
